@@ -154,34 +154,34 @@ interface OperationNode {
 }
 
 class Parser {
-  private tokens: Token[];
-  private at = 0;
+  tokens: Token[];
+  at = 0;
 
   constructor(tokens: Token[]) {
     this.tokens = tokens;
   }
 
-  private peek(): Token {
+  peek(): Token {
     return this.tokens[this.at];
   }
 
-  private next(): Token {
+  next(): Token {
     const token = this.tokens[this.at];
     this.at += 1;
     return token;
   }
 
-  private isPunct(value: string): boolean {
+  isPunct(value: string): boolean {
     const token = this.peek();
     return token.kind === 'punct' && token.value === value;
   }
 
-  private expectPunct(value: string): void {
+  expectPunct(value: string): void {
     if (!this.isPunct(value)) throw new Error(`expected ${value}`);
     this.at += 1;
   }
 
-  private expectName(): string {
+  expectName(): string {
     const token = this.next();
     if (token.kind !== 'name') throw new Error('expected a name');
     return token.value;
@@ -221,7 +221,7 @@ class Parser {
     return { operations, fragments };
   }
 
-  private parseVariableDefinitions(defaults: Map<string, ValueNode>): void {
+  parseVariableDefinitions(defaults: Map<string, ValueNode>): void {
     this.expectPunct('(');
     while (!this.isPunct(')')) {
       this.expectPunct('$');
@@ -237,7 +237,7 @@ class Parser {
     this.expectPunct(')');
   }
 
-  private skipType(): void {
+  skipType(): void {
     if (this.isPunct('[')) {
       this.next();
       this.skipType();
@@ -248,7 +248,7 @@ class Parser {
     if (this.isPunct('!')) this.next();
   }
 
-  private skipDirectives(): void {
+  skipDirectives(): void {
     while (this.isPunct('@')) {
       this.next();
       this.expectName();
@@ -264,7 +264,7 @@ class Parser {
     }
   }
 
-  private parseSelectionSet(): SelectionNode[] {
+  parseSelectionSet(): SelectionNode[] {
     this.expectPunct('{');
     const selections: SelectionNode[] = [];
     while (!this.isPunct('}')) {
@@ -310,7 +310,7 @@ class Parser {
     return selections;
   }
 
-  private parseValue(): ValueNode {
+  parseValue(): ValueNode {
     const token = this.next();
     switch (token.kind) {
       case 'int':
